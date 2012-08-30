@@ -1,2 +1,6 @@
 nodeJsWebserver
 ===============
+
+## Installation
+
+	npm install

@@ -1,6 +1,6 @@
 var fs = require("fs");
 
-function favicon(response) {
+function favicon(request,response) {
 	fs.readFile("ico/favicon.ico", "binary", function(error, file) {
 		if (error) {
 			response.writeHead(500, {
