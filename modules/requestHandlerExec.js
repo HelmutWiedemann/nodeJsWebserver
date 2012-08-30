@@ -1,7 +1,7 @@
 var exec = require("child_process").exec;
 var fs = require("fs");
 
-function dir(response) {
+function dir(request,response) {
 	console.log("Request handler 'dir' was called.");
 	exec("dir", function(error, stdout, stderr) {
 		response.writeHead(200, {
@@ -12,7 +12,7 @@ function dir(response) {
 	});
 }
 
-function ls(response) {
+function ls(request,response) {
 	console.log("Request handler 'ls' was called.");
 	exec("ls", function(error, stdout, stderr) {
 		response.writeHead(200, {
