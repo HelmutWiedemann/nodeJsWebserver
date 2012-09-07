@@ -1,9 +1,36 @@
 var mysql = require('mysql');
+var myArgs = require('optimist').argv,
+     help = 'Following parameter are supported --user --database';
 
-var client = mysql.createClient({
+// default values
+var options = {
 	user: 'root',
-	password: ''
-});
+	password: '',
+	database: 'test',
+	host:     'localhost'
+}
+	 
+ if ((myArgs.h)||(myArgs.help)) {
+   console.log(help);
+   process.exit(0);
+ }
+function setOptionArg(key){
+	if(myArgs[key]){
+		options[key] = myArgs[key];
+		console.log(myArgs[key]);
+		
+	}
+}
+
+setOptionArg("user");
+setOptionArg("database");
+setOptionArg("host");
+setOptionArg("password");
+
+
+
+
+var client = mysql.createClient(options);
 
 client.useDatabase('test');
 
@@ -28,4 +55,4 @@ function listPeople(req,res){
 	
 }
 
-exports.listPeople = listPeople;
+exports.listPeople = listPeople
