@@ -1,6 +1,6 @@
 var fs = require("fs");
 
-function showIndex(response) {
+function showIndex(request,response) {
 	fs.readFile("html/index.html", function(error, file) {
 		if (error) {
 			response.writeHead(500, {
