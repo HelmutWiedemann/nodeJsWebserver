@@ -10,7 +10,7 @@ var options = {
 	password: '',
 	database: 'test',
 	host:     'localhost',
-	poolSize: 500
+	poolSize: 25
 }
 
 	 
