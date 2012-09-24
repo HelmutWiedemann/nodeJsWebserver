@@ -59,6 +59,7 @@ function listPeople(req,res){
 		if(err){
 			res.writeHead(500, {'Content-Type': 'application/json'});
 			res.end(JSON.stringify({error: err}));
+			console.log("error",err)
 			return;
 		}
 		var randId = getRandom(0,results[0].count);
