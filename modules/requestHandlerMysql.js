@@ -38,8 +38,14 @@ var pool = new MySQLPool(options);
 
 function listPeople(req,res){
 	pool.query("select count(*) as count from people", function(err, results, fields){
+		if(err){
+			console.log("error ",err);
+		}
 		var randId = results[0].count; //TODO generate a random between 0 and count
-			pool.query("insert into requests (timestamp, agent, person_id) values (NOW(),?,?);",[req.headers['user-agent'],randId], function(e){
+			pool.query("insert into requests (timestamp, agent, person_id) values (NOW(),?,?);",[req.headers['user-agent'],randId], function(err, results, fields){
+				if(err){
+					console.log("error ",err);
+				}
 				pool.query("SELECT * from people", 
 					function(err, results, fields) {
 						if (err){
