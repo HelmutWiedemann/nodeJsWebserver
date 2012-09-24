@@ -1,4 +1,5 @@
 var mysql = require('mysql');
+var MySQLPool = require("mysql-pool").MySQLPool;
 var myArgs = require('optimist').argv,
      help = 'Following parameter are supported --user --database';
 
@@ -7,8 +8,10 @@ var options = {
 	user: 'root',
 	password: '',
 	database: 'test',
-	host:     'localhost'
+	host:     'localhost',
+	poolSize: 4
 }
+
 	 
  if ((myArgs.h)||(myArgs.help)) {
    console.log(help);
@@ -28,18 +31,16 @@ setOptionArg("host");
 setOptionArg("password");
 
 
+var pool = new MySQLPool(options);
 
 
 
 
 function listPeople(req,res){
-	var client = mysql.createClient(options);
-
-	client.useDatabase('test');
-	client.query("select count(*) as count from people", function(err, results, fields){
+	pool.query("select count(*) as count from people", function(err, results, fields){
 		var randId = results[0].count; //TODO generate a random between 0 and count
-			client.query("insert into requests (timestamp, agent, person_id) values (NOW(),?,?);",[req.headers['user-agent'],randId], function(e){
-				client.query("SELECT * from people", 
+			pool.query("insert into requests (timestamp, agent, person_id) values (NOW(),?,?);",[req.headers['user-agent'],randId], function(e){
+				pool.query("SELECT * from people", 
 					function(err, results, fields) {
 						if (err){
 							res.writeHead(500, {'Content-Type': 'application/json'});
