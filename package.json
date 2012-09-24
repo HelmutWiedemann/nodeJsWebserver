@@ -14,6 +14,7 @@
   "dependencies": {
     "mysql": "~0.9.6",
     "optimist": "~0.3.4",
-    "mysql-pool": "~0.2.2"
+    "mysql-pool": "~0.2.2",
+    "async": "~0.1.22"
   }
 }

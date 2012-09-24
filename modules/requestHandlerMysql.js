@@ -1,4 +1,5 @@
-var mysql = require('mysql');
+var mysql = require('mysql')
+	async = require('async');
 var MySQLPool = require("mysql-pool").MySQLPool;
 var myArgs = require('optimist').argv,
      help = 'Following parameter are supported --user --database';
@@ -9,7 +10,7 @@ var options = {
 	password: '',
 	database: 'test',
 	host:     'localhost',
-	poolSize: 4
+	poolSize: 500
 }
 
 	 
@@ -58,6 +59,7 @@ function listPeople(req,res){
 		if(err){
 			res.writeHead(500, {'Content-Type': 'application/json'});
 			res.end(JSON.stringify({error: err}));
+			return;
 		}
 		var randId = getRandom(0,results[0].count);
 			pool.query("insert into requests (timestamp, agent, person_id) values (NOW(),?,?);",[req.headers['user-agent'],randId], function(err, results, fields){
@@ -74,6 +76,7 @@ function listPeople(req,res){
 							res.writeHead(200, {'Content-Type': 'application/json'});
 							res.end(JSON.stringify(results));
 						}
+						pool.end();
 					}
 				);
 			});
