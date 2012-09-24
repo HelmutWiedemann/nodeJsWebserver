@@ -33,18 +33,37 @@ setOptionArg("password");
 
 var pool = new MySQLPool(options);
 
-
+function getRandom(min, max) {
+ if(min > max) {
+  return -1;
+ }
+ 
+ if(min == max) {
+  return min;
+ }
+ 
+ var r;
+ 
+ do {
+  r = Math.random();
+ }
+ while(r == 1.0);
+ 
+ return min + parseInt(r * (max-min+1));
+}
 
 
 function listPeople(req,res){
 	pool.query("select count(*) as count from people", function(err, results, fields){
 		if(err){
-			console.log("error ",err);
+			res.writeHead(500, {'Content-Type': 'application/json'});
+			res.end(JSON.stringify({error: err}));
 		}
-		var randId = results[0].count; //TODO generate a random between 0 and count
+		var randId = getRandom(0,results[0].count);
 			pool.query("insert into requests (timestamp, agent, person_id) values (NOW(),?,?);",[req.headers['user-agent'],randId], function(err, results, fields){
 				if(err){
-					console.log("error ",err);
+					res.writeHead(500, {'Content-Type': 'application/json'});
+					res.end(JSON.stringify({error: err}));
 				}
 				pool.query("SELECT * from people", 
 					function(err, results, fields) {
