@@ -30,11 +30,12 @@ setOptionArg("password");
 
 
 
-var client = mysql.createClient(options);
 
-client.useDatabase('test');
 
 function listPeople(req,res){
+	var client = mysql.createClient(options);
+
+	client.useDatabase('test');
 	client.query("select count(*) as count from people", function(err, results, fields){
 		var randId = results[0].count; //TODO generate a random between 0 and count
 			client.query("insert into requests (timestamp, agent, person_id) values (NOW(),?,?);",[req.headers['user-agent'],randId], function(e){
