@@ -12,7 +12,7 @@
   "license": "BSD",
   "description": "nodeJsWebserver ===============",
   "dependencies": {
-    "mysql": "~0.9.6",
+    "mysql": "2.0.0-alpha3",
     "optimist": "~0.3.4",
     "mysql-pool": "~0.2.2",
     "async": "~0.1.22"

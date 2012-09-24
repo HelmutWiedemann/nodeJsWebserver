@@ -1,6 +1,6 @@
 var mysql = require('mysql')
 	async = require('async');
-var MySQLPool = require("mysql-pool").MySQLPool;
+//var MySQLPool = require("mysql-pool").MySQLPool;
 var myArgs = require('optimist').argv,
      help = 'Following parameter are supported --user --database';
 
@@ -32,7 +32,8 @@ setOptionArg("host");
 setOptionArg("password");
 
 
-var pool = new MySQLPool(options);
+
+
 
 function getRandom(min, max) {
  if(min > max) {
@@ -55,7 +56,10 @@ function getRandom(min, max) {
 
 
 function listPeople(req,res){
-	pool.query("select count(*) as count from people", function(err, results, fields){
+	var connection = mysql.createConnection(options);
+
+	connection.connect();
+	connection.query("select count(*) as count from people", function(err, results, fields){
 		if(err){
 			res.writeHead(500, {'Content-Type': 'application/json'});
 			res.end(JSON.stringify({error: err}));
@@ -63,12 +67,12 @@ function listPeople(req,res){
 			return;
 		}
 		var randId = getRandom(0,results[0].count);
-			pool.query("insert into requests (timestamp, agent, person_id) values (NOW(),?,?);",[req.headers['user-agent'],randId], function(err, results, fields){
+			connection.query("insert into requests (timestamp, agent, person_id) values (NOW(),?,?);",[req.headers['user-agent'],randId], function(err, results, fields){
 				if(err){
 					res.writeHead(500, {'Content-Type': 'application/json'});
 					res.end(JSON.stringify({error: err}));
 				}
-				pool.query("SELECT * from people", 
+				connection.query("SELECT * from people", 
 					function(err, results, fields) {
 						if (err){
 							res.writeHead(500, {'Content-Type': 'application/json'});
@@ -77,7 +81,7 @@ function listPeople(req,res){
 							res.writeHead(200, {'Content-Type': 'application/json'});
 							res.end(JSON.stringify(results));
 						}
-						pool.end();
+						connection.end();
 					}
 				);
 			});
