@@ -1,5 +1,5 @@
 var cluster = require('cluster');
-var numCPUs = 2;//require('os').cpus().length;
+var numCPUs = require('os').cpus().length;
 
 var child = require("./modules/child");
 
