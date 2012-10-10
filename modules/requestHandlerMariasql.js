@@ -84,7 +84,6 @@ function listPeople(req,response){
 	c.query(pCount()).on("result",function(result){
 		result.on("row", function(row){
 			var randId = getRandom(0,row.count);
-			console.log(randId);
 			c.query(pInsert({agent: req.headers['user-agent'], person_id: randId})).on("result",function(result){
 				c.query(pSelect()).on("result",function(result) {
 					var rows = [];
