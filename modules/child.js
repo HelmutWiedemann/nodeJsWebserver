@@ -3,7 +3,7 @@ var router = require("./router");
 var requestHandlerHtml = require("./requestHandlerHtml");
 var requestHandlerExec = require("./requestHandlerExec");
 var requestHandlerIcon = require("./requestHandlerIcon");
-var requestHandlerMysql = require("./requestHandlerMysql");
+var requestHandlerMysql = require("./requestHandlerMariasql");
 
 var handle = {}
 handle["/"] = requestHandlerHtml.showIndex;
