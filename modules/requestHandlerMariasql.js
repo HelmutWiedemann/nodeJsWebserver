@@ -62,15 +62,6 @@ var pCount = c.prepare("select count(*) as count from people");
 var pInsert = c.prepare("insert into requests (timestamp, agent, person_id) values (NOW(),:agent,:person_id);")
 var pSelect = c.prepare("SELECT * from people");
 
-function listPeople(req,response){
-
-	function genericErrorHandler(err){
-		response.writeHead(500, {'Content-Type': 'application/json'});
-		response.end(JSON.stringify({error: err}));
-		console.log("error",err)
-		return;
-	}
-	
 	c.on('connect', function() {
 	   console.log('Client connected');
 	 })
@@ -81,9 +72,19 @@ function listPeople(req,response){
 	   console.log('Client closed');
 	 });
 
+function listPeople(req,response){
+
+	function genericErrorHandler(err){
+		response.writeHead(500, {'Content-Type': 'application/json'});
+		response.end(JSON.stringify({error: err}));
+		console.log("error",err)
+		return;
+	}
+
 	c.query(pCount()).on("result",function(result){
 		result.on("row", function(row){
 			var randId = getRandom(0,row.count);
+			console.log(randId);
 			c.query(pInsert({agent: req.headers['user-agent'], person_id: randId})).on("result",function(result){
 				c.query(pSelect()).on("result",function(result) {
 					var rows = [];
@@ -95,8 +96,8 @@ function listPeople(req,response){
 					})
 							
 					}
-				).on("error", genericErrorHandler);
-			}).on("error",genericErrorHandler);
+				);
+			});
 		})
 		
 	}).on("error", genericErrorHandler);
