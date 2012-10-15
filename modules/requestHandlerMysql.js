@@ -1,5 +1,6 @@
 var mysql = require('mysql'),
-	async = require('async');
+	async = require('async'),
+	poolModule = require('generic-pool');
 //var MySQLPool = require("mysql-pool").MySQLPool;
 var myArgs = require('optimist').argv,
      help = 'Following parameter are supported --user --database';
@@ -54,9 +55,29 @@ function getRandom(min, max) {
  return min + parseInt(r * (max-min+1));
 }
 
-var connection = mysql.createConnection(options);
+
+
+var pool = poolModule.Pool({
+    name     : 'mysql',
+    create   : function(callback) {
+        var connection = mysql.createConnection(options);
+
+        // parameter order: err, resource
+        // new in 1.0.6
+        callback(null, connection);
+    },
+    destroy  : function(client) { client.end(); },
+    max      : 10,
+    // optional. if you set this, make sure to drain() (see step 3)
+    min      : 2, 
+    // specifies how long a resource can stay idle in pool before being removed
+    idleTimeoutMillis : 30000,
+     // if true, logs via console.log - can also be a function
+    log : false 
+});
 
 function listPeople(req,res){
+	pool.acquire(function(err, connection){
 
 	connection.query("select count(*) as count from people", function(err, results, fields){
 		if(err){
@@ -80,10 +101,13 @@ function listPeople(req,res){
 							res.writeHead(200, {'Content-Type': 'application/json'});
 							res.end(JSON.stringify(results));
 						}
+						pool.release(connection);
 					}
 				);
 			});
 	})
+	});
+
 }
 
 exports.listPeople = listPeople

@@ -16,6 +16,7 @@
     "optimist": "~0.3.4",
     "mysql-pool": "~0.2.2",
     "async": "~0.1.22",
-    "mariasql": "~0.1.7"
+    "mariasql": "~0.1.7",
+    "generic-pool": "~2.0.1"
   }
 }
