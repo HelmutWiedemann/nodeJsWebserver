@@ -1,4 +1,4 @@
-var mysql = require('mysql')
+var mysql = require('mysql'),
 	async = require('async');
 //var MySQLPool = require("mysql-pool").MySQLPool;
 var myArgs = require('optimist').argv,
@@ -54,11 +54,10 @@ function getRandom(min, max) {
  return min + parseInt(r * (max-min+1));
 }
 
+var connection = mysql.createConnection(options);
 
 function listPeople(req,res){
-	var connection = mysql.createConnection(options);
 
-	connection.connect();
 	connection.query("select count(*) as count from people", function(err, results, fields){
 		if(err){
 			res.writeHead(500, {'Content-Type': 'application/json'});
@@ -81,13 +80,10 @@ function listPeople(req,res){
 							res.writeHead(200, {'Content-Type': 'application/json'});
 							res.end(JSON.stringify(results));
 						}
-						connection.end();
 					}
 				);
 			});
 	})
-
-	
 }
 
 exports.listPeople = listPeople

@@ -94,8 +94,7 @@ function listPeople(req,response){
 						response.end(JSON.stringify(rows));
 					})
 							
-					}
-				);
+				});
 			});
 		})
 		
